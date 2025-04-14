@@ -2,10 +2,9 @@ import React from "react";
 import { View, Text, Button, StyleSheet, TextInput,FlatList,Image, } from "react-native";
 
 
-const recentTracks = [ 
-  { id: "1", title: "Track 1", artist: "Artist A", Cover: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5a/db/d6/5adbd6c4-0f85-1c2e-5e31-dd11cc462610/194690582486_cover.jpg/600x600bb.jpg"},
-  { id: "2", title: "Track 2", artist: "Artist B", Cover: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5a/db/d6/5adbd6c4-0f85-1c2e-5e31-dd11cc462610/194690582486_cover.jpg/600x600bb.jpg" },
-  { id: "3", title: "Track 3", artist: "Artist C", Cover: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5a/db/d6/5adbd6c4-0f85-1c2e-5e31-dd11cc462610/194690582486_cover.jpg/600x600bb.jpg" },
+const recentTracks = [ { id: "1", title: "Track 1", artist: "Artist A", Cover: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5a/db/d6/5adbd6c4-0f85-1c2e-5e31-dd11cc462610/194690582486_cover.jpg/600x600bb.jpg"},
+{ id: "2", title: "Track 2", artist: "Artist B", Cover: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5a/db/d6/5adbd6c4-0f85-1c2e-5e31-dd11cc462610/194690582486_cover.jpg/600x600bb.jpg" },
+{ id: "3", title: "Track 3", artist: "Artist C", Cover: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5a/db/d6/5adbd6c4-0f85-1c2e-5e31-dd11cc462610/194690582486_cover.jpg/600x600bb.jpg" },
 ]
 const HomeScreen = ({ navigation }) => {
   return (

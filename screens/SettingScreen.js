@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Switch, Button, Alert, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Switch, Button, Alert, ScrollView, } from "react-native";
 
 const SettingScreen = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
