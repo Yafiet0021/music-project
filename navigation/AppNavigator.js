@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // screens import 
@@ -9,11 +9,13 @@ import HomeScreen from "../screens/HomeScreen";
 import SettingScreen from "../screens/SettingScreen";
 import LibraryScreen from "../screens/LibraryScreen";
 import PlayListScreen from "../screens/PlayListScreen";
+import PlaylistSongsScreen from "../screens/PlaylistSongsScreen";
 
-// bottom navigation 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
+  const [playlists, setPlaylists] = useState([]);
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -38,25 +40,21 @@ const AppNavigator = () => {
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Library" component={LibraryScreen} />
-        <Tab.Screen name="PlayList" component={PlayListScreen} />
+        <Tab.Screen name="Library">
+          {props => <LibraryScreen {...props} playlists={playlists} setPlaylists={setPlaylists} />}
+        </Tab.Screen>
+        <Tab.Screen name="PlayList">
+          {props => <PlayListScreen {...props} playlists={playlists} setPlaylists={setPlaylists} />}
+        </Tab.Screen>
         <Tab.Screen name="Settings" component={SettingScreen} />
+        <Tab.Screen 
+          name="PlaylistSongs" 
+          component={PlaylistSongsScreen}
+          options={{ tabBarButton: () => null }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    color: '#333',
-  },
-});
 
 export default AppNavigator;

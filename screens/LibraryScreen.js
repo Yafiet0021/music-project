@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, Image } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  FlatList, 
+  TouchableOpacity, 
+  Alert, 
+  Image, 
+  Modal 
+} from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,11 +16,13 @@ import TrackPlayer from '../components/TrackPlayer';
 import * as ImagePicker from 'expo-image-picker';
 import FiltersOption from '../components/Filtersoptions.js';
 
-const LibraryScreen = ({ navigation }) => {
+const LibraryScreen = ({ navigation, playlists, setPlaylists }) => {
   const [songs, setSongs] = useState([]);
   const [sound, setSound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(null);
+  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
 
   // Clean up sound on unmount
   useEffect(() => {
@@ -45,7 +56,6 @@ const LibraryScreen = ({ navigation }) => {
         return;
       }
 
-      // Ask for cover image
       const imageResult = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -136,6 +146,23 @@ const LibraryScreen = ({ navigation }) => {
     setIsPlaying(false);
   };
 
+  const openAddToPlaylist = (song) => {
+    setSelectedSong(song);
+    setShowPlaylistModal(true);
+  };
+
+  const addToPlaylist = (playlistId) => {
+    setPlaylists(prev => 
+      prev.map(p => 
+        p.id === playlistId && !p.songs.some(s => s.id === selectedSong.id)
+          ? { ...p, songs: [...p.songs, selectedSong] }
+          : p
+      )
+    );
+    setShowPlaylistModal(false);
+    Alert.alert('Success', 'Song added to playlist');
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -165,7 +192,7 @@ const LibraryScreen = ({ navigation }) => {
                 source={
                   item.cover
                     ? { uri: item.cover }
-                    : require('../assets/image.png') // 👈 Add your placeholder image here
+                    : require('../assets/image.png')
                 }
                 style={styles.coverImage}
               />
@@ -174,11 +201,22 @@ const LibraryScreen = ({ navigation }) => {
                 <Text style={styles.trackArtist}>{item.artist}</Text>
               </View>
             </View>
-            <Ionicons
-              name={currentTrack?.id === item.id && isPlaying ? "pause" : "play"}
-              size={24}
-              color="#007AFF"
-            />
+            <View style={styles.actions}>
+              <TouchableOpacity 
+                onPress={(e) => {
+                  e.stopPropagation();
+                  openAddToPlaylist(item);
+                }}
+                style={styles.addButton}
+              >
+                <Ionicons name="add-circle-outline" size={24} color="#007AFF" />
+              </TouchableOpacity>
+              <Ionicons
+                name={currentTrack?.id === item.id && isPlaying ? "pause" : "play"}
+                size={24}
+                color="#007AFF"
+              />
+            </View>
           </TouchableOpacity>
         )}
       />
@@ -191,6 +229,61 @@ const LibraryScreen = ({ navigation }) => {
         onPrevious={handlePrevious}
         onClose={handleClosePlayer}
       />
+
+      <Modal
+        visible={showPlaylistModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowPlaylistModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Add to Playlist</Text>
+            <Text style={styles.modalSubtitle}>Select a playlist for "{selectedSong?.title}"</Text>
+            
+            {playlists.length > 0 ? (
+              <FlatList
+                data={playlists}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={styles.playlistList}
+                renderItem={({ item }) => (
+                  <TouchableOpacity 
+                    style={styles.playlistOption}
+                    onPress={() => addToPlaylist(item.id)}
+                    disabled={item.songs.some(s => s.id === selectedSong?.id)}
+                  >
+                    <Text style={styles.playlistName}>{item.name}</Text>
+                    {item.songs.some(s => s.id === selectedSong?.id) && (
+                      <Ionicons name="checkmark" size={20} color="#4CAF50" />
+                    )}
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <View style={styles.emptyState}>
+                <Ionicons name="musical-notes-outline" size={40} color="#ccc" />
+                <Text style={styles.emptyText}>No playlists available</Text>
+                <TouchableOpacity 
+                  style={styles.createPlaylistButton}
+                  onPress={() => {
+                    setShowPlaylistModal(false);
+                    navigation.navigate('PlayList');
+                  }}
+                >
+                  <Text style={styles.createPlaylistText}>Create Playlist</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowPlaylistModal(false)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -243,6 +336,84 @@ const styles = StyleSheet.create({
   trackArtist: {
     fontSize: 14,
     color: '#666',
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  addButton: {
+    marginRight: 15,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    width: '85%',
+    maxHeight: '70%',
+    borderRadius: 10,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    textAlign: 'center',
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  playlistList: {
+    flexGrow: 1,
+  },
+  playlistOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  playlistName: {
+    fontSize: 16,
+  },
+  emptyState: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    color: '#666',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  createPlaylistButton: {
+    backgroundColor: '#007AFF',
+    padding: 12,
+    borderRadius: 6,
+    width: '100%',
+    alignItems: 'center',
+  },
+  createPlaylistText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  closeButton: {
+    backgroundColor: '#f0f0f0',
+    padding: 12,
+    borderRadius: 6,
+    marginTop: 15,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#333',
+    fontWeight: '600',
   },
 });
 
