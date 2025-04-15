@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Picker } from 'react-native';
+import { View, Text, StyleSheet, Picker, Button, Switch } from 'react-native';
+import LibraryScreen from '../screens/LibraryScreen';
 
 const FiltersOption = ({ onFilterApply }) => {
     const [selectedArtist, setSelectedArtist] = useState('');

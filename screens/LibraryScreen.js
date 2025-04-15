@@ -5,6 +5,7 @@ import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
 import TrackPlayer from '../components/TrackPlayer';
 import * as ImagePicker from 'expo-image-picker';
+import FiltersOption from '../components/Filtersoptions.js';
 
 const LibraryScreen = ({ navigation }) => {
   const [songs, setSongs] = useState([]);
