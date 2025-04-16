@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, FlatList, Image, StyleSheet } from "react-native";
-import { db } from "../config/FireBase"; // Adjust path if needed
-import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
-
+import { db } from "../config/FireBase"; 
 const HomeScreen = () => {
   const [recentTracks, setRecentTracks] = useState([]);
   const [recentPlaylists, setRecentPlaylists] = useState([]);
@@ -14,7 +12,7 @@ const HomeScreen = () => {
         const snapshot = await getDocs(q);
         const tracks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setRecentTracks(tracks);
-      } catch (error) {
+      } catch (error) {c
         console.error("Error fetching tracks:", error);
       }
     };
