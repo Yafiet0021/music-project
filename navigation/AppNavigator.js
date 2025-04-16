@@ -47,11 +47,7 @@ const AppNavigator = () => {
           {props => <PlayListScreen {...props} playlists={playlists} setPlaylists={setPlaylists} />}
         </Tab.Screen>
         <Tab.Screen name="Settings" component={SettingScreen} />
-        <Tab.Screen 
-          name="PlaylistSongs" 
-          component={PlaylistSongsScreen}
-          options={{ tabBarButton: () => null }}
-        />
+        
       </Tab.Navigator>
     </NavigationContainer>
   );

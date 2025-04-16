@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  FlatList, 
-  TouchableOpacity, 
-  Alert, 
-  Image, 
-  Modal 
-} from 'react-native';
+import { View,Text,StyleSheet,FlatList,TouchableOpacity, Alert, Image, Modal } from 'react-native';
+
+// 
 import * as DocumentPicker from 'expo-document-picker';
 import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
 import TrackPlayer from '../components/TrackPlayer';
 import * as ImagePicker from 'expo-image-picker';
+import { collection, addDoc } from 'firebase/firestore';
+const addSongToLibrary = async (song) => {
+  await addDoc(collection(db, 'songs'), song); 
+};
+
+const addPlaylistToLibrary = async (playlist) => {
+  await addDoc(collection(db, 'playlists'), playlist); // { id, name, tracks: [] }
+};
 
 const LibraryScreen = ({ navigation, playlists, setPlaylists }) => {
   const [songs, setSongs] = useState([]);

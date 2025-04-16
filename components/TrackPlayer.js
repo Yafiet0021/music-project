@@ -2,13 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const TrackPlayer = ({ 
-  currentTrack, 
-  isPlaying, 
-  onPlayPause,
-  onNext,
-  onPrevious,
-  onClose
+const TrackPlayer = ({
+  currentTrack, isPlaying, onPlayPause, onNext, onPrevious, onClose
 }) => {
   if (!currentTrack) return null;
 
@@ -18,12 +13,12 @@ const TrackPlayer = ({
         <Text style={styles.title} numberOfLines={1}>{currentTrack.title}</Text>
         <Text style={styles.artist} numberOfLines={1}>{currentTrack.artist}</Text>
       </View>
-      
+
       <View style={styles.controls}>
         <TouchableOpacity onPress={onPrevious}>
           <Ionicons name="play-skip-back" size={24} color="#007AFF" />
         </TouchableOpacity>
-        
+
         <TouchableOpacity onPress={onPlayPause}>
           <Ionicons
             name={isPlaying ? "pause" : "play"}
@@ -31,12 +26,12 @@ const TrackPlayer = ({
             color="#007AFF"
           />
         </TouchableOpacity>
-        
+
         <TouchableOpacity onPress={onNext}>
           <Ionicons name="play-skip-forward" size={24} color="#007AFF" />
         </TouchableOpacity>
       </View>
-      
+
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
         <Ionicons name="close" size={20} color="#666" />
       </TouchableOpacity>

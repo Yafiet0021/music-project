@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { collection, addDoc } from 'firebase/firestore';
+const addSongToLibrary = async (song) => {
+  await addDoc(collection(db, 'songs'), song); // { id, title, artist, cover }
+};
+
+const addPlaylistToLibrary = async (playlist) => {
+  await addDoc(collection(db, 'playlists'), playlist); // { id, name, tracks: [] }
+};
 
 const PlayListScreen = ({ navigation, route }) => {
   const [playlists, setPlaylists] = useState([]);

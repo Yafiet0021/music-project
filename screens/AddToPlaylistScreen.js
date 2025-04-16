@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const PlaylistSongsScreen = ({ route, navigation }) => {
   const { playlist } = route.params;
-  const [songs, setSongs] = useState(playlist.songs); // Manage songs locally
+  const [songs, setSongs] = useState(playlist.songs);
 
   const removeSongFromPlaylist = (songId) => {
     setSongs(prev => prev.filter(song => song.id !== songId));
