@@ -7,6 +7,7 @@ import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
 import TrackPlayer from '../components/TrackPlayer';
 import * as ImagePicker from 'expo-image-picker';
+<<<<<<< HEAD
 import { collection, addDoc } from 'firebase/firestore';
 const addSongToLibrary = async (song) => {
   await addDoc(collection(db, 'songs'), song); 
@@ -15,6 +16,9 @@ const addSongToLibrary = async (song) => {
 const addPlaylistToLibrary = async (playlist) => {
   await addDoc(collection(db, 'playlists'), playlist); // { id, name, tracks: [] }
 };
+=======
+import FiltersOption from '../components/Filtersoptions.js';
+>>>>>>> 493b1f7cafcbaf8227f4dc40bc91cf8c8ef5bc69
 
 const LibraryScreen = ({ navigation, playlists, setPlaylists }) => {
   const [songs, setSongs] = useState([]);
